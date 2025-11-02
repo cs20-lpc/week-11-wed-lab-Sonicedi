@@ -1,13 +1,38 @@
 template <typename T>
 int HashTableClosed<T>::insert(const T& key)
 {
-    // TO DO:
-    return 0;
+    int probes = 0;
+    for (int i = 0; i < M; ++i) {
+        int idx = probeIndex(key, i);
+        ++probes;
+
+        if (!occupied[idx]) {
+            table[idx] = key;
+            occupied[idx] = true;
+            ++N;
+            return probes;
+        }
+        if (table[idx] == key) {
+            return probes;
+        }
+    }
+    throw runtime_error("insert: hash table is full");
 }
 
 template <typename T>
 pair<bool, int> HashTableClosed<T>::search(const T& key) const
 {
-    // TO DO: 
-    return {false, 0};
+    int probes = 0;
+    for (int i = 0; i < M; ++i) {
+        int idx = probeIndex(key, i);
+        ++probes;
+
+        if (!occupied[idx]) {
+            return {false, probes};
+        }
+        if (table[idx] == key) {
+            return {true, probes};
+        }
+    }
+    return {false, probes};
 }
